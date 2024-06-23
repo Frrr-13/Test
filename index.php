@@ -4,11 +4,6 @@ class MultiCurrencyAccount {
     private $balances = [];
     private $exchangeRates = [];
     private $enabledCurrencies = [];
-    /**
-     * @var mixed
-     */
-    private $baseCurrency;
-
     public function __construct($exchangeRates) {
         $this->exchangeRates = $exchangeRates;
         $this->enabledCurrencies = array_keys($exchangeRates);
