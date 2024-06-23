@@ -4,6 +4,10 @@ class MultiCurrencyAccount {
     private $balances = [];
     private $exchangeRates = [];
     private $enabledCurrencies = [];
+    /**
+     * @var mixed
+     */
+    private $baseCurrency;
 
     public function __construct($exchangeRates) {
         $this->exchangeRates = $exchangeRates;
@@ -24,7 +28,7 @@ class MultiCurrencyAccount {
         if (!isset($this->balances[$currency]) || $this->balances[$currency] < $amount) {
             throw new Exception("Недостаточно средств на счете в указанной валюте");
         }
-        $this->balances[$currency] -= $amount;
+        return $this->balances[$currency] -= $amount;
     }
 
     public function convert($amount, $fromCurrency, $toCurrency) {
@@ -36,9 +40,7 @@ class MultiCurrencyAccount {
 
 
         $baseAmount = $amount / $this->exchangeRates[$fromCurrency];
-        $convertedAmount = $baseAmount * $this->exchangeRates[$toCurrency];
-
-        return $convertedAmount;
+        return $baseAmount * $this->exchangeRates[$toCurrency];
     }
 
     public function getBalance($currency) {
@@ -128,25 +130,30 @@ $exchangeRates = [
     'USD' => 0.66,
     'EUR' => 1,
     'RUB' => 150];
-$account->getTotalBalanceInCurrency('EUR');
+$account->getTotalBalanceInCurrency('EUR').'<br>';
     //7.
-$money = $account->withdraw(1000, 'RUB');
-$account->deposit($money, 'EUR');
+$account->convert(1000, 'RUB', 'EUR');
+$account->getTotalBalanceInCurrency('EUR').'<br>';
+
     //8.
 $exchangeRates = [
     'USD' => 0.83,
     'EUR' => 1,
     'RUB' => 120];
     //9.
-$account->getTotalBalanceInCurrency('EUR');
+ $account->getTotalBalanceInCurrency('EUR');
     //10.
 $exchangeRates = [
     'USD' => 100,
     'EUR' => 120,
     'RUB' => 1];
+
 $account->disableCurrency('EUR','RUB');
 $account->disableCurrency('USD', 'RUB');
 echo "Доступные валюты: " . implode(', ', $account->getEnabledCurrencies()) . "<br>";
-$account->getTotalBalanceInCurrency('RUB');
+try {
+     $account->getTotalBalanceInCurrency('RUB');
+} catch (Exception $e) {
+}
 
 ?>
