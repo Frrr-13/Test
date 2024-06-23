@@ -23,7 +23,7 @@ class MultiCurrencyAccount {
         if (!isset($this->balances[$currency]) || $this->balances[$currency] < $amount) {
             throw new Exception("Недостаточно средств на счете в указанной валюте");
         }
-        return $this->balances[$currency] -= $amount;
+        $this->balances[$currency] -= $amount;
     }
 
     public function convert($amount, $fromCurrency, $toCurrency) {
